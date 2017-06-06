@@ -36,7 +36,7 @@ module.exports = {
   edit(req, res, next) {
     const reflectionId = req.params.id
     const reflectionProps = req.body
-    //verify correct keys are being passed
+    // verify correct keys are being passed
     Reflection.findByIdAndUpdate(reflectionId, reflectionProps)
       .then(() => Reflection.findById(reflectionId))
       .then(reflection => res.send(reflection))
