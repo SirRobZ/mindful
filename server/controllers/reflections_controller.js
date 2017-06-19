@@ -18,13 +18,13 @@ module.exports = {
     const props = req.body
     const userId = props.user
     // verify correct keys being passed
-    const reflection = new Reflection(props)
+    const reflection = new Reflection(props);
 
     User.findById(userId)
       .then((user) => {
         if (user) {
-          user.reflections.push(reflection._id)
-          return Promise.all([user.save(), reflection.save()])
+          user.reflections.push(reflection._id);
+          return Promise.all([User.findByIdAndUpdate(userId, user), reflection.save()])
         }
         return Promise.reject('User could not be found')
       })

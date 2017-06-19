@@ -15,7 +15,8 @@ module.exports = {
       .catch(next)
   },
   create(req, res, next) {
-    const userProps = req.body
+    const userProps = req.body;
+
     // verify correct keys being passed
     const user = new User(userProps)
     user.save()
@@ -26,7 +27,14 @@ module.exports = {
           })
           .catch(next)
       })
-      .catch(next)
+      .catch((err) => {
+        if(err.message === 'username must be unique'){
+          res.status(409).send({
+            errorMessage: err.message
+          });
+        }
+        next(err);
+      })
   },
   edit(req, res, next) {
     const userId = req.params.id

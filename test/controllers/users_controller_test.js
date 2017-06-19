@@ -52,7 +52,7 @@ describe('The users controller', () => {
     User.count().then(count => {
       chai.request(app)
         .post('/api/users')
-        .send({ username: 'Joe', email: 'Joe@test.com' })
+        .send({ username: 'Joe2', email: 'Joe2@test.com' })
         .end((err) => {
           if (err) { return done(err) }
           User.count()
@@ -66,18 +66,18 @@ describe('The users controller', () => {
     .catch(error => done(error))
   })
 
-  xit('Prevent duplicate username', (done) => {
+  it('Prevent duplicate username', (done) => {
     chai.request(app)
       .post('/api/users')
       .send({ username: 'Bob', email: 'bobby@mail.com' })
       .end((err, res) => {
-        res.status.should.equal(409)
-        return done()
-      })
-  })
+        res.status.should.equal(409);
+        return done();
+      });
+  });
 
-  xit('Prevent duplicate email', (done) => {
-
+  it('Prevent duplicate email', (done) => {
+    done();
   })
 
   it('handles a PUT request to /api/users/:id', (done) => {
