@@ -17,17 +17,44 @@ function bindEvents() {
     router(state)
   })
 
-  $('.form-signin').on('submit', function(event) {
-    event.preventDefault()
-    var payload = {}
-    var formData = $( this ).serializeArray()
-    formData.forEach(function(item) {
-      payload[item.name] = item.value;
-    })
-    axios.post('/api/users', payload)
-      .then(function(res) {
-      })
+  // $('.form-signin').on('submit', function(event) {
+  //   event.preventDefault()
+  //   var payload = {}
+  //   var formData = $( this ).serializeArray()
+  //   formData.forEach(function(item) {
+  //     payload[item.name] = item.value;
+  //   })
+  //   axios.post('/api/users', payload)
+  //     .then(function(res) {
+  //     })
+  // })
+
+  var form = $('#signup-form');
+  form.on('submit', function(event){
+    event.preventDefault();
+    sendSignupDataToAPI(form);
+  });
+}
+
+function sendSignupDataToAPI(form){
+  var data = form.serializeArray().reduce((obj, item) => {
+    obj[item.name] = item.value;
+    return obj;
+  }, {});
+  debugger;
+  $.ajax({
+    url: '/api/users',
+    method: 'POST',
+    dataType: 'json',
+    data: data
   })
+  .then((response) => {
+    debugger;
+    console.log('>> API response: ', response);
+  })
+  .catch((error) => {
+    cosnole.log('>> API error: ', error);
+  });
 }
 
 function router(state) {

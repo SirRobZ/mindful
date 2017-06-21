@@ -16,9 +16,12 @@ module.exports = {
   },
   create(req, res, next) {
     const userProps = req.body;
-
+    console.log('>> userProps: ', userProps);
     // verify correct keys being passed
     const user = new User(userProps)
+
+    console.log('>> user: ' );
+
     user.save()
       .then((savedUser) => {
         User.findById(savedUser._id)
