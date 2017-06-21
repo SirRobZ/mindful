@@ -15,7 +15,7 @@ const HabitSchema = new Schema({
 
 const ReflectionSchema = new Schema({
   content: String,
-  contentSentiment: Number,
+  mindfulnessScore: Number,
   createdAt: Date,
   updatedAt: Date,
   habit: HabitSchema
