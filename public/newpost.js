@@ -35,6 +35,7 @@
 
     function bindStartButtonEvent() {
       $('.start button').on('click', function(event) {
+        event.preventDefault();
         $('.start').toggleClass('hidden');
         $('.container').toggleClass('hidden');
         renderQuestion(state);
@@ -43,6 +44,7 @@
 
     function bindNextButtonEvent() {
       $('.container .nextButton').on('click', function(event) {
+        event.preventDefault()
         if (state.currentQuestion < state.questions.length) {
           scoreAnswers();
           state.currentQuestion++;
@@ -50,7 +52,6 @@
         } else {
           $('.container').toggleClass('hidden');
           $('.finish').toggleClass('hidden');
-          $('.finish p').text('Your final score was ' + state.currentScore + ' out of ' + state.questions.length);
         }
       })
     }
@@ -72,17 +73,15 @@
       }
     }
 
-    function bindRetakeButtonEvent() {
-      $('.finish .retakeButton').on('click', function(event) {
-        state.currentQuestion = 0;
-        state.currentScore = 0;
-        renderQuestion(state);
-        $('.container').toggleClass('hidden');
-        $('.finish').toggleClass('hidden');
-        $('.nextButton').toggleClass('hidden');
-        $('.checkButton').toggleClass('hidden');
-        $('.container .result').toggleClass('hidden');
+    function bindSubmitButtonEvent() {
+      $('.finish button').on('click', function(event) {
+        event.preventDefault();
+        sendReflectionDataToAPI(form);
       })
+    }
+
+    function sendReflectionDataToAPI(form) {
+
     }
 
     bindStartButtonEvent();
