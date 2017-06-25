@@ -5,7 +5,7 @@ const { ObjectId } = Schema.Types
 const UserSchema = new Schema({
   username: {
     type: String,
-    //unique: true,
+    unique: true,
     validate: {
       validator: (username) => username.length > 2,
       message: 'Name must be longer than 2 characters.'
@@ -16,7 +16,7 @@ const UserSchema = new Schema({
   lastName: String,
   email: {
     type: String,
-    //unique: true,
+    unique: true,
   },
   password: String,
   mindfulnessScore: Number,
@@ -44,17 +44,17 @@ UserSchema.virtual('reflectionCount').get(function virtual() {
   return this.reflections.length
 })
 
-UserSchema.pre('save', function pre(next) {
-  const User = mongoose.model('user')
-  User.findOne({ username: this.username })
-    .then(user => {
-      if (user === null) {
-        return next()
-      }
-      const err = new Error('username must be unique')
-      return next(err)
-    })
-})
+// UserSchema.pre('save', function pre(next) {
+//   const User = mongoose.model('user')
+//   User.findOne({ username: this.username })
+//     .then(user => {
+//       if (user === null) {
+//         return next()
+//       }
+//       const err = new Error('username must be unique')
+//       return next(err)
+//     })
+// })
 
 // UserSchema.pre('save', function pre(next) {
 //   const User = mongoose.model('user')

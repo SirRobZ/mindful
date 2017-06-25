@@ -7,18 +7,36 @@ const userRouter = require('./routes/user')
 const authRouter = require('./routes/auth')
 const reflectionRouter = require('./routes/reflection')
 const cors = require('cors')
+const path = require('path');
 
 mongoose.Promise = global.Promise
 app.use(cors())
 
 function server() {
-  app.use(bodyParser.json())
-  app.use(express.static('public'))
+  //app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static('public'));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
 
 
   userRouter(app)
   authRouter(app)
   reflectionRouter(app)
+
+  app.use((err, req, res, next) => {
+    if(err){
+      let status = 500;
+      if(typeof err.name === 'MongoError' && err.code === 11000){
+        status = 409;
+      }
+        res.status(status).send({
+            errorMessage: err.message
+          });
+
+
+      next(err);
+    }
+  });
 
   app.listen(process.env.PORT || 8080, () => {
     /* eslint-disable no-console*/

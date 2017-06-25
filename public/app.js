@@ -42,19 +42,28 @@ function sendSignupDataToAPI(form){
     return obj;
   }, {});
   debugger;
-  $.ajax({
+  /*$.ajax({
     url: '/api/users',
     method: 'POST',
     dataType: 'json',
     data: data
-  })
+  })*/
+  $.post('/api/users', data)
   .then((response) => {
     debugger;
     console.log('>> API response: ', response);
   })
   .catch((error) => {
-    cosnole.log('>> API error: ', error);
+
+    console.log('>> API error: ', error);
+    handleError(error);
   });
+}
+
+function handleError(error){
+  if(error.status === 409){
+    alert('Duplicate Values');
+  }
 }
 
 function router(state) {

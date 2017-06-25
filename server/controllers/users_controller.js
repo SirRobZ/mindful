@@ -30,14 +30,7 @@ module.exports = {
           })
           .catch(next)
       })
-      .catch((err) => {
-        if(err.message === 'username must be unique'){
-          res.status(409).send({
-            errorMessage: err.message
-          });
-        }
-        next(err);
-      })
+      .catch(next);
   },
   edit(req, res, next) {
     const userId = req.params.id
