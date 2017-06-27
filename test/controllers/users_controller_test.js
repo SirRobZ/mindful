@@ -22,8 +22,15 @@ describe('The users controller', () => {
       email: 'Bob@test.com'
     })
     Promise.all([joe.save(), bob.save()])
-      .then(() => done())
-      .catch(error => done(error))
+      .then(([joeUser, bobUser]) => {
+        console.log('>>>> joeUser:', joeUser);
+        console.log('>>>> bobUser:', bobUser);
+        done();
+      })
+      .catch(error => {
+        console.log('ERROR IN USER CREATION!!');
+        done(error);
+      });
   })
 
   it('handles a GET request to /api/users', (done) => {
@@ -77,7 +84,13 @@ describe('The users controller', () => {
   });
 
   it('Prevent duplicate email', (done) => {
-    done();
+    chai.request(app)
+      .post('/api/users')
+      .send({ username: 'Bobby', email: 'Bob@test.com' })
+      .end((err, res) => {
+        res.status.should.equal(409);
+        return done();
+      });
   })
 
   it('handles a PUT request to /api/users/:id', (done) => {

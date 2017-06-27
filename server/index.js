@@ -25,8 +25,13 @@ function server() {
 
   app.use((err, req, res, next) => {
     if(err){
+      console.log('Error middleware');
       let status = 500;
-      if(typeof err.name === 'MongoError' && err.code === 11000){
+      console.log('err.name:', typeof err.name);
+      console.log('err.code:', typeof err.code);
+      console.log('code is 11000: ', err.code === 11000);
+      console.log('name is MongoError: ', err.name === 'MongoError');
+      if((err.name === 'MongoError' && err.code === 11000) || err.code === 409){
         status = 409;
       }
         res.status(status).send({

@@ -44,29 +44,33 @@ UserSchema.virtual('reflectionCount').get(function virtual() {
   return this.reflections.length
 })
 
-// UserSchema.pre('save', function pre(next) {
-//   const User = mongoose.model('user')
-//   User.findOne({ username: this.username })
-//     .then(user => {
-//       if (user === null) {
-//         return next()
-//       }
-//       const err = new Error('username must be unique')
-//       return next(err)
-//     })
-// })
+UserSchema.pre('save', function pre(next) {
+  const User = mongoose.model('user')
+  User.findOne({ username: this.username })
+    .then(user => {
+      if (user === null) {
+        return next()
+      }
+      const err = new Error('username must be unique')
+      err.code = 409;
+      err.attributeName = 'username';
+      return next(err)
+    })
+})
 
-// UserSchema.pre('save', function pre(next) {
-//   const User = mongoose.model('user')
-//   User.findOne({ email: this.email })
-//     .then(user => {
-//       if (user === null) {
-//         return next()
-//       }
-//       const err = new Error('email must be unique')
-//       return next(err)
-//     })
-// })
+UserSchema.pre('save', function pre(next) {
+  const User = mongoose.model('user')
+  User.findOne({ email: this.email })
+    .then(user => {
+      if (user === null) {
+        return next()
+      }
+      const err = new Error('email must be unique');
+      err.code = 409;
+      err.attributeName = 'email';
+      return next(err)
+    })
+})
 
 UserSchema.pre('remove', function pre(next) {
   const Reflection = mongoose.model('reflection')
