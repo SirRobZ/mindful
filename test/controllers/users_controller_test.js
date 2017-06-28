@@ -76,7 +76,7 @@ describe('The users controller', () => {
   it('Prevent duplicate username', (done) => {
     chai.request(app)
       .post('/api/users')
-      .send({ username: 'Bob', email: 'bobby@mail.com' })
+      .send({ username: 'Bob', email: 'bobby@mail.com', firstName: 'Bobby2', lastName: 'Bob' })
       .end((err, res) => {
         res.status.should.equal(409);
         return done();

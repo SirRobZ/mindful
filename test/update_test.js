@@ -22,8 +22,9 @@ describe('Updating records', () => {
   }
 
   it('model instance set n save', (done) => {
-    abc.set('username', 'DEF')
-    assertName(abc.save(), done)
+    abc.set('username', 'DEF');
+    abc.set('email', 'anotherEmail@email.com');
+    assertName(abc.save(), done);
   })
 
   it('model instnace update', (done) => {
