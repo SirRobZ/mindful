@@ -2,12 +2,13 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const DATABASE_URL = process.env.DATABASE_URL
+const cors = require('cors')
+const path = require('path');
+const _ = require('lodash');
 const userRouter = require('./routes/user')
 const authRouter = require('./routes/auth')
 const reflectionRouter = require('./routes/reflection')
-const cors = require('cors')
-const path = require('path');
+const DATABASE_URL = process.env.DATABASE_URL
 
 mongoose.Promise = global.Promise
 app.use(cors())
@@ -27,16 +28,20 @@ function server() {
     if(err){
       console.log('Error middleware');
       let status = 500;
+      const responseObject = {
+        errorMessage: err.message
+      };
       console.log('err.name:', typeof err.name);
       console.log('err.code:', typeof err.code);
       console.log('code is 11000: ', err.code === 11000);
       console.log('name is MongoError: ', err.name === 'MongoError');
       if((err.name === 'MongoError' && err.code === 11000) || err.code === 409){
         status = 409;
+        if(_.has(err, 'attributeName')){
+          responseObject.attributeName = err.attributeName;
+        }
       }
-        res.status(status).send({
-            errorMessage: err.message
-          });
+        res.status(status).send(responseObject);
 
 
       next(err);

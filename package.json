@@ -17,6 +17,7 @@
     "co": "^4.6.0",
     "cors": "^2.8.3",
     "express": "^4.15.2",
+    "lodash": "^4.17.4",
     "mongoose": "^4.9.4"
   },
   "devDependencies": {

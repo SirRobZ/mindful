@@ -1,7 +1,15 @@
 /* globals $ */
 var state = {
-  isLandingPage: true,
-}
+  isLandingPage: true
+};
+
+var page = {
+  signupSuccessMessage: '#signup-form .signup-messages .alert-success',
+  signupFailureMessage: '#signup-form .signup-messages .alert-danger',
+  signupDefaultFailure: 'Sign up process did not work',
+  signupDefaultSuccess: 'Signup Sucessful!',
+  invalid409 : 'One of the values in the form is not valid'
+};
 
 function bindEvents() {
   $('.login-button').on('click', function(event) {
@@ -30,44 +38,52 @@ function bindEvents() {
   // })
 
   var form = $('#signup-form');
-  form.on('submit', function(event){
+  form.on('submit', function(event) {
     event.preventDefault();
     sendSignupDataToAPI(form);
   });
 }
 
-function sendSignupDataToAPI(form){
+function sendSignupDataToAPI(form) {
   var data = form.serializeArray().reduce((obj, item) => {
     obj[item.name] = item.value;
     return obj;
   }, {});
-  debugger;
-  /*$.ajax({
-    url: '/api/users',
-    method: 'POST',
-    dataType: 'json',
-    data: data
-  })*/
-  $.post('/api/users', data)
-  .then((response) => {
-    debugger;
-    console.log('>> API response: ', response);
-  })
-  .catch((error) => {
-
-    console.log('>> API error: ', error);
-    handleError(error);
-  });
-}
-
-function handleError(error){
-  if(error.status === 409){
-    alert('Duplicate Values');
+  if (data.password === data.passwordConfirm) {
+    delete data.passwordConfirm;
+    $.post('/api/users', data)
+      .then(handleSuccess)
+      .catch(handleError);
+  } else {
+    $('#signup-form .signup-messages .alert-success').text('Passwords must be identical')
   }
 }
 
+function handleSuccess(response){
+  var messageEl = $(page.signupSuccessMessage);
+  var errorMessageEl = $(page.signupFailureMessage);
+  messageEl.html(page.signupDefaultSuccess);
+  errorMessageEl.addClass('hidden');
+  messageEl.removeClass('hidden');
+}
+
+function handleError(error) {
+  var messageEl = $(page.signupFailureMessage);
+
+  if (error.status === 409) {
+    if(error.responseJSON.hasOwnProperty('attributeName')){
+      messageEl.html(error.responseJSON.attributeName + ' should be unique!');
+    } else {
+      messageEl.html(page.invalid409);
+    }
+  } else {
+    messageEl.html(page.signupDefaultFailure);
+  }
+  messageEl.removeClass('hidden');
+}
+
 function router(state) {
-  if(state.isLandingPage) {
+  if (state.isLandingPage) {
     $('.landing-page').removeClass('hidden')
   } else {
     $('.landing-page').addClass('hidden')
